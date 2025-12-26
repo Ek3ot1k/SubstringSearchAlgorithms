@@ -1,0 +1,8 @@
+A programmer is a specialist who writes the source code for software. 
+A programmer's job includes designing, developing, testing, and maintaining programs. 
+The main programming languages are Java, Python, JavaScript, C++, and C#.
+Programmers use algorithms and data structures to solve complex problems. 
+Modern programming requires knowledge of frameworks, databases, and version control systems.
+The profession of a programmer is in high demand in the labor market. Salaries in the IT sector
+are among the highest. Programmers work in various fields: 
+web development, mobile applications, artificial intelligence, data analysis.

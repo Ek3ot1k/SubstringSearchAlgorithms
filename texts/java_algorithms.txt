@@ -1,0 +1,75 @@
+Java String Class Documentation and Best Practices
+
+The String class in Java represents character strings. All string literals in Java, 
+such as "hello", are implemented as instances of this class. Strings are constant; 
+their values cannot be changed after they are created. Because String objects are 
+immutable, they can be shared and are thread-safe.
+
+Key Methods:
+- length(): returns the length of the string
+- charAt(int index): returns the character at the specified index
+- substring(int beginIndex, int endIndex): returns a new string
+- indexOf(String str): returns the index within this string
+- equals(Object anObject): compares this string to the specified object
+- compareTo(String anotherString): compares two strings lexicographically
+- toLowerCase() / toUpperCase(): converts all characters
+- trim(): removes leading and trailing whitespace
+- split(String regex): splits this string around matches
+- replace(char oldChar, char newChar): returns a new string
+
+StringBuilder vs StringBuffer: StringBuilder is generally preferred as it's faster 
+but not thread-safe. StringBuffer is synchronized and thread-safe but slower.
+
+Memory Considerations: Strings in Java are stored in the string pool. When you create 
+a string literal, Java checks the pool first. Use `new String()` to force creation 
+of a new object. Intern method adds string to pool.
+
+Performance Tips:
+1. Use StringBuilder for concatenation in loops
+2. Prefer char[] for intensive character manipulation
+3. Use String.format() for complex formatting
+4. Consider Apache Commons StringUtils for utilities
+
+Regular Expressions: Java provides Pattern and Matcher classes. Common regex patterns:
+- \d matches digits
+- \w matches word characters
+- \s matches whitespace
+- . matches any character
+- * zero or more, + one or more, ? zero or one
+
+Unicode Support: Java strings are UTF-16 encoded. Code points vs code units:
+A code point is a numerical value that maps to a specific character.
+A code unit is the basic unit of storage (16 bits in UTF-16).
+
+Internationalization: Use ResourceBundle for localization. Collator for locale-sensitive 
+string comparison. Normalizer for Unicode normalization forms.
+
+Security Considerations:
+- Avoid string concatenation for SQL queries (use PreparedStatement)
+- Sanitize user input to prevent injection attacks
+- Use char[] for passwords (can be cleared from memory)
+
+Best Practices:
+1. Use isEmpty() instead of length() == 0
+2. Prefer switch on strings (Java 7+)
+3. Use try-with-resources for streams
+4. Consider Guava or Apache Commons for utilities
+
+Common Pitfalls:
+1. String comparison with == instead of equals()
+2. Memory leaks from substring() in old Java versions
+3. Unnecessary string creation in loops
+4. Ignoring locale in case conversion
+
+Java 8+ Features: String.join() for concatenation, String.chars() for stream operations, 
+Pattern.asPredicate() for functional programming.
+
+Testing: Use assertEquals for string comparison in tests. Consider parameterized tests 
+for multiple test cases. Mock string dependencies for unit testing.
+
+Performance Benchmarks: Always measure with realistic data. JMH (Java Microbenchmark 
+Harness) is recommended for microbenchmarks. Consider cache effects and JIT compilation.
+
+Future Developments: Project Valhalla (value types) may affect string performance. 
+Pattern matching enhancements in newer Java versions. Potential string deduplication 
+in JVM garbage collection.
