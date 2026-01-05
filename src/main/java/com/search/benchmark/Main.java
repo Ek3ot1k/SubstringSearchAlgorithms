@@ -89,9 +89,6 @@ public class Main {
 
         // Выводим общую сводку
         printOverallSummary(results);
-
-        // Анализ хеш-функций
-        analyzeHashFunctions(results);
     }
 
     private static List<TestCase> createTestCasesFromFiles() {
@@ -232,87 +229,5 @@ public class Main {
         }
     }
 
-    private static void analyzeHashFunctions(List<BenchmarkResult> results) {
-        System.out.println("\n\n" + "=".repeat(80));
-        System.out.println("АНАЛИЗ ВЛИЯНИЯ ХЕШ-ФУНКЦИЙ НА РАБИНА-КАРПА");
-        System.out.println("=".repeat(80));
 
-        // Собираем данные только для Рабина-Карпа
-        Map<String, List<Double>> timesByHash = new HashMap<>();
-        Map<String, List<Long>> collisionsByHash = new HashMap<>();
-
-        for (BenchmarkResult result : results) {
-            for (AlgorithmStats stats : result.getAlgorithmStats()) {
-                String name = stats.getAlgorithmName();
-                if (name.contains("Рабин-Карп")) {
-                    timesByHash.computeIfAbsent(name, k -> new ArrayList<>())
-                            .add(stats.getTimeMillis());
-                    collisionsByHash.computeIfAbsent(name, k -> new ArrayList<>())
-                            .add(stats.getCollisions());
-                }
-            }
-        }
-
-        System.out.println("\nСравнение хеш-функций:");
-        System.out.println("-".repeat(80));
-
-        for (String hashFunc : timesByHash.keySet()) {
-            List<Double> times = timesByHash.get(hashFunc);
-            List<Long> collisions = collisionsByHash.get(hashFunc);
-
-            double avgTime = times.stream().mapToDouble(Double::doubleValue).average().orElse(0);
-            long totalCollisions = collisions.stream().mapToLong(Long::longValue).sum();
-            double avgCollisions = collisions.stream().mapToLong(Long::longValue).average().orElse(0);
-
-            System.out.printf("\n%s:\n", hashFunc);
-            System.out.printf("  Среднее время: %.3f мс\n", avgTime);
-            System.out.printf("  Всего коллизий: %,d\n", totalCollisions);
-            System.out.printf("  Среднее коллизий на тест: %.1f\n", avgCollisions);
-
-            // Анализ эффективности
-            if (totalCollisions == 0) {
-                System.out.println("  ✓ Отличная хеш-функция: нет коллизий");
-            } else if (avgCollisions < 10) {
-                System.out.println("  ✓ Хорошая хеш-функция: мало коллизий");
-            } else if (avgCollisions < 100) {
-                System.out.println("  ⚠ Средняя хеш-функция: умеренные коллизии");
-            } else {
-                System.out.println("  ✗ Слабая хеш-функция: много коллизий");
-            }
-        }
-
-        // Вывод рекомендаций
-        System.out.println("\n\n" + "=".repeat(80));
-        System.out.println("ВЫВОДЫ И РЕКОМЕНДАЦИИ");
-        System.out.println("=".repeat(80));
-
-        System.out.println("\n1. ВЛИЯНИЕ ХЕШ-ФУНКЦИЙ НА РАБИНА-КАРПА:");
-        System.out.println("   • XORHash: самый быстрый, но имеет много коллизий");
-        System.out.println("   • SimpleHash (base=256): хороший баланс скорости и качества");
-        System.out.println("   • HornerHash (base=131): наименьшее количество коллизий");
-        System.out.println("   • Коллизии увеличивают время работы (требуется проверка символов)");
-
-        System.out.println("\n2. СРАВНЕНИЕ АЛГОРИТМОВ:");
-        System.out.println("   • Бойер-Мур: лучшая производительность на английских текстах");
-        System.out.println("   • КМП: стабильная производительность, гарантированно линейное время");
-        System.out.println("   • Наивный: простой, но неэффективный на больших текстах");
-        System.out.println("   • Рабин-Карп: эффективен при правильном выборе хеш-функции");
-
-        System.out.println("\n3. РЕКОМЕНДАЦИИ ПО ВЫБОРУ:");
-        System.out.println("   • Для общего использования: Бойер-Мур или Рабин-Карп с SimpleHash");
-        System.out.println("   • Для текстов с повторениями: КМП");
-        System.out.println("   • Когда важна скорость: XORHash (если можно допустить коллизии)");
-        System.out.println("   • Когда важна точность: HornerHash или SimpleHash");
-        System.out.println("   • Для коротких текстов: разница незначительна");
-
-        System.out.println("\n4. ДЛЯ ИССЛЕДОВАНИЯ/ЛЕКЦИИ:");
-        System.out.println("   • Использовать разные тексты (короткий, технический, литературный)");
-        System.out.println("   • Тестировать с общим паттерном для честного сравнения");
-        System.out.println("   • Измерять и время, и коллизии, и количество проверок");
-        System.out.println("   • Демонстрировать trade-off между скоростью и точностью");
-
-        System.out.println("\n" + "=".repeat(80));
-        System.out.println("ИССЛЕДОВАНИЕ ЗАВЕРШЕНО");
-        System.out.println("=".repeat(80));
-    }
 }
